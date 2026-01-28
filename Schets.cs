@@ -100,6 +100,26 @@ public class Schets
                 Rectangle rect = new Rectangle(int.Parse(woorden[1]), int.Parse(woorden[2]), int.Parse(woorden[3]), int.Parse(woorden[4]));
                 VoegToe(new RechthoekElement(rect, Pens.Black));
             }
+
+            else if (woorden[0] == "VolRechtHoek")
+            {
+
+            }
+
+            else if (woorden[0] == "Cirkel")
+            {
+
+            }
+
+            else if (woorden[0] == "VolCirkel")
+            {
+
+            }
+
+            else if (woorden[0] == "lijn")
+            {
+
+            }
         }
         r.Close();
         TekenOpnieuw();
