@@ -72,8 +72,13 @@ public abstract class TweepuntTool : StartpuntTool
     }
     public override void MuisLos(SchetsControl s, Point p)
     {   base.MuisLos(s, p);
-        this.Compleet(s.MaakBitmapGraphics(), this.startpunt, p);
+        this.Compleet(s, this.startpunt, p);
         s.Invalidate();
+    }
+
+    public virtual void Compleet (SchetsControl s, Point p1, Point p2)
+    {
+        this.Bezig(s.MaakBitmapGraphics(), p1,p2);
     }
     public override void Letter(SchetsControl s, char c)
     {
@@ -92,6 +97,12 @@ public class RechthoekTool : TweepuntTool
     public override void Bezig(Graphics g, Point p1, Point p2)
     {   g.DrawRectangle(MaakPen(kwast,3), TweepuntTool.Punten2Rechthoek(p1, p2));
     }
+
+    public override void Compleet(SchetsControl s, Point p1, Point p2)
+    {
+        Rectangle r = TweepuntTool.Punten2Rechthoek(p1, p2);
+        s.Schets.VoegToe(new RechthoekElement(r, MaakPen(kwast, 3)));
+    }
 }
 
 public class CirkelTool : TweepuntTool
@@ -103,25 +114,36 @@ public class CirkelTool : TweepuntTool
         g.DrawEllipse(MaakPen(kwast, 3), TweepuntTool.Punten2Rechthoek(p1, p2));
         
     }
+
+    public override void Compleet(SchetsControl s, Point p1, Point p2)
+    {
+        Rectangle r = TweepuntTool.Punten2Rechthoek(p1, p2);
+        s.Schets.VoegToe(new CirkelElement(r, MaakPen(kwast, 3)));
+    }
 }
 
 public class VolRechthoekTool : RechthoekTool
 {
     public override string ToString() { return "vlak"; }
 
-    public override void Compleet(Graphics g, Point p1, Point p2)
-    {   g.FillRectangle(kwast, TweepuntTool.Punten2Rechthoek(p1, p2));
+    public override void Compleet(SchetsControl s, Point p1, Point p2)
+    {
+        Rectangle r = TweepuntTool.Punten2Rechthoek(p1, p2);
+        s.Schets.VoegToe(new VolRechthoekElement(r, new SolidBrush(s.PenKleur)));
     }
+
 }
 
 public class VolCirkelTool : CirkelTool
 {
     public override string ToString() { return "volcirkel"; }
 
-    public override void Compleet(Graphics g, Point p1, Point p2)
+    public override void Compleet(SchetsControl s, Point p1, Point p2)
     {
-        g.FillEllipse(kwast, TweepuntTool.Punten2Rechthoek(p1, p2));
+        Rectangle r = TweepuntTool.Punten2Rechthoek(p1, p2);
+        s.Schets.VoegToe(new VolCirkelElement(r, new SolidBrush(s.PenKleur)));
     }
+
 }
 
 public class LijnTool : TweepuntTool
@@ -130,6 +152,11 @@ public class LijnTool : TweepuntTool
 
     public override void Bezig(Graphics g, Point p1, Point p2)
     {   g.DrawLine(MaakPen(this.kwast,3), p1, p2);
+    }
+
+    public override void Compleet(SchetsControl s, Point p1, Point p2)
+    {
+        s.Schets.VoegToe(new LijnElement(p1, p2, MaakPen(kwast, 3)));
     }
 }
 
@@ -143,11 +170,17 @@ public class PenTool : LijnTool
     }
 }
     
-public class GumTool : PenTool
+public class GumTool : ISchetsTool
 {
     public override string ToString() { return "gum"; }
 
-    public override void Bezig(Graphics g, Point p1, Point p2)
-    {   g.DrawLine(MaakPen(Brushes.White, 7), p1, p2);
+    public void MuisVast(SchetsControl s, Point p)
+    {
+        s.Schets.Gum(p);
+        s.Invalidate();
     }
+
+    public void MuisDrag(SchetsControl s, Point p) { }
+    public void MuisLos(SchetsControl s, Point p) { }
+    public void Letter(SchetsControl s, char c) { }
 }
