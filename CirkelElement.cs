@@ -23,6 +23,6 @@ public class CirkelElement : Element
 
     public override string ZichzelfOpslaan()
     {
-        return $"Cirkel {kader.X} {kader.Y} {kader.Width} {kader.Height} ";
+        return $"Cirkel {kader.X} {kader.Y} {kader.Width} {kader.Height} {pen.Color.Name}";
     }
 }

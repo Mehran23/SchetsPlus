@@ -81,6 +81,6 @@ public class LijnElement : Element
 
     public override string ZichzelfOpslaan()
     {
-        return $"Lijn {p1.X} {p1.Y} {p2.X} {p2.Y}";
+        return $"Lijn {p1.X} {p1.Y} {p2.X} {p2.Y} {pen.Color.Name}";
     }
 }

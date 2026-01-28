@@ -65,12 +65,14 @@ public class Schets
     {
         gr.DrawImage(bitmap, 0, 0);
     }
+
     public void Schoon()
     {
         elementen.Clear(); //zonder dit blijven de elementen staan na klikken op clear, ze komen weer tevoorschijn
         Graphics gr = Graphics.FromImage(bitmap);
         gr.FillRectangle(Brushes.White, 0, 0, bitmap.Width, bitmap.Height);
     }
+
     public void Roteer()
     {
         bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
@@ -80,50 +82,72 @@ public class Schets
     {
         StreamWriter w = new StreamWriter(filenaam);
         foreach (Element e in elementen)
-            w.WriteLine(e.ZichzelfOpslaan);
+            w.WriteLine(e.ZichzelfOpslaan());
         w.Close();
     }
 
     public void Inlezen(string filenaam)
     {
-        StreamReader r = new StreamReader(filenaam);
-        string regel;
-        string[] woorden;
         elementen.Clear();
+
+        using StreamReader r = new StreamReader(filenaam);
+        string regel;
 
         while ((regel = r.ReadLine()) != null)
         {
-            woorden = regel.Split(" ");
+            string[] w = regel.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (w.Length == 0) continue;
 
-            if (woorden[0] == "Rechthoek")
+            string token = w[0];
+
+            switch (token)
             {
-                Rectangle rect = new Rectangle(int.Parse(woorden[1]), int.Parse(woorden[2]), int.Parse(woorden[3]), int.Parse(woorden[4]));
-                VoegToe(new RechthoekElement(rect, Pens.Black));
-            }
+                case "Rechthoek":
+                    {
+                        Rectangle rect = new Rectangle(int.Parse(w[1]), int.Parse(w[2]), int.Parse(w[3]), int.Parse(w[4]));
+                        Color kleur = Color.FromName(w[5]);
+                        elementen.Add(new RechthoekElement(rect, new Pen(kleur, 3)));
+                        break;
+                    }
 
-            else if (woorden[0] == "VolRechtHoek")
-            {
+                case "VolRechthoek":
+                    {
+                        Rectangle rect = new Rectangle(int.Parse(w[1]), int.Parse(w[2]), int.Parse(w[3]), int.Parse(w[4]));
+                        Color kleur = Color.FromName(w[5]);
+                        elementen.Add(new VolRechthoekElement(rect, new SolidBrush(kleur)));
+                        break;
+                    }
 
-            }
+                case "Cirkel":
+                    {
+                        Rectangle rect = new Rectangle(int.Parse(w[1]), int.Parse(w[2]), int.Parse(w[3]), int.Parse(w[4]));
+                        Color kleur = Color.FromName(w[5]);
+                        elementen.Add(new CirkelElement(rect, new Pen(kleur, 3)));
+                        break;
+                    }
 
-            else if (woorden[0] == "Cirkel")
-            {
+                case "VolCirkel":
+                    {
+                        Rectangle rect = new Rectangle(int.Parse(w[1]), int.Parse(w[2]), int.Parse(w[3]), int.Parse(w[4]));
+                        Color kleur = Color.FromName(w[5]);
+                        elementen.Add(new VolCirkelElement(rect, new SolidBrush(kleur)));
+                        break;
+                    }
 
-            }
-
-            else if (woorden[0] == "VolCirkel")
-            {
-
-            }
-
-            else if (woorden[0] == "lijn")
-            {
-
+                case "Lijn":
+                    {
+                        Point a = new Point(int.Parse(w[1]), int.Parse(w[2]));
+                        Point b = new Point(int.Parse(w[3]), int.Parse(w[4]));
+                        Color kleur = Color.FromName(w[5]);
+                        elementen.Add(new LijnElement(a, b, new Pen(kleur, 3)));
+                        break;
+                    }
             }
         }
-        r.Close();
+
         TekenOpnieuw();
     }
+
 
 }
 

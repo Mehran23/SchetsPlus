@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
 
 public class SchetsWin : Form
 {   
@@ -10,6 +11,8 @@ public class SchetsWin : Form
     ISchetsTool huidigeTool;
     Panel paneel;
     bool vast;
+    private string bestandsNaam = null;
+    private bool gewijzigd = false;
 
     private void veranderAfmeting(object o, EventArgs ea)
     {
@@ -26,6 +29,43 @@ public class SchetsWin : Form
     private void klikToolButton(object obj, EventArgs ea)
     {
         this.huidigeTool = (ISchetsTool)((RadioButton)obj).Tag;
+    }
+    private void opslaan(object sender, EventArgs ea)
+    {
+        if (bestandsNaam == null) { opslaanals(sender, ea); return; }
+        schetscontrol.Schets.Opslaan(bestandsNaam);
+        gewijzigd = false;
+        this.Text = "Schets - " + Path.GetFileName(bestandsNaam);
+    }
+
+    private void opslaanals(object sender, EventArgs ea)
+    {
+        using SaveFileDialog sfd = new SaveFileDialog();
+        sfd.Filter = "Schets bestanden (*.schets)|*.schets|Alle bestanden (*.*)|*.*";
+        sfd.DefaultExt = "schets";
+
+        if (sfd.ShowDialog() == DialogResult.OK)
+        {
+            bestandsNaam = sfd.FileName;
+            schetscontrol.Schets.Opslaan(bestandsNaam);
+            gewijzigd = false;
+            this.Text = "Schets - " + Path.GetFileName(bestandsNaam);
+        }
+    }
+
+    private void open(object sender, EventArgs e)
+    {
+        using OpenFileDialog ofd = new OpenFileDialog();
+        ofd.Filter = "Schets bestanden (*.schets)|*.schets|Alle bestanden (*.*)|*.*";
+
+        if (ofd.ShowDialog() == DialogResult.OK)
+        {
+            bestandsNaam = ofd.FileName;
+            schetscontrol.Schets.Inlezen(bestandsNaam);
+            gewijzigd = false;
+            this.Text = "Schets - " + Path.GetFileName(bestandsNaam);
+            schetscontrol.Invalidate();
+        }
     }
 
     private void afsluiten(object obj, EventArgs ea)
@@ -61,7 +101,7 @@ public class SchetsWin : Form
                                     };
         schetscontrol.MouseUp   += (object o, MouseEventArgs mea) =>
                                     {   if (vast)
-                                        huidigeTool.MuisLos (schetscontrol, mea.Location);
+                                        { huidigeTool.MuisLos(schetscontrol, mea.Location); gewijzigd = true; }
                                         vast = false; 
                                     };
         schetscontrol.KeyPress +=  (object o, KeyPressEventArgs kpea) => 
@@ -85,6 +125,9 @@ public class SchetsWin : Form
     {   
         ToolStripMenuItem menu = new ToolStripMenuItem("File");
         menu.MergeAction = MergeAction.MatchOnly;
+        menu.DropDownItems.Add("Open", null, this.open);
+        menu.DropDownItems.Add("Opslaan", null, this.opslaan);
+        menu.DropDownItems.Add("Opslaan als", null, this.opslaanals);
         menu.DropDownItems.Add("Sluiten", null, this.afsluiten);
         menuStrip.Items.Add(menu);
     }

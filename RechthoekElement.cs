@@ -23,6 +23,6 @@ public class RechthoekElement : Element
 
     public override string ZichzelfOpslaan()
     {
-        return $"rechthoek {kader.X} {kader.Y} {kader.Width} {kader.Height} ";
+        return $"Rechthoek {kader.X} {kader.Y} {kader.Width} {kader.Height} {pen.Color.Name}";
     }
 }

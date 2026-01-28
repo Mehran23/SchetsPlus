@@ -23,6 +23,7 @@ public class VolCirkelElement : Element
 
     public override string ZichzelfOpslaan()
     {
-        return $"Volcirkel {kader.X} {kader.Y} {kader.Width} {kader.Height} ";
+        string kleur = ((SolidBrush)kwast).Color.Name;
+        return $"VolCirkel {kader.X} {kader.Y} {kader.Width} {kader.Height} {kleur}";
     }
 }

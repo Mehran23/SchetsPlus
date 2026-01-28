@@ -25,7 +25,8 @@ public class VolRechthoekElement : Element
 
     public override string ZichzelfOpslaan()
     {
-        return $"VolRechtHoek {kader.X} {kader.Y} {kader.Width} {kader.Height} ";
+		string kleur = ((SolidBrush)kwast).Color.Name;
+        return $"VolRechthoek {kader.X} {kader.Y} {kader.Width} {kader.Height} {kleur}";
     }
 }
 
