@@ -20,4 +20,9 @@ public class CirkelElement : Element
     {
         return kader.Contains(p);
     }
+
+    public override string ZichzelfOpslaan()
+    {
+        return $"Cirkel {kader.X} {kader.Y} {kader.Width} {kader.Height} ";
+    }
 }

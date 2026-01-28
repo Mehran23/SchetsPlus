@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 
 public class LijnElement : Element
@@ -78,4 +79,8 @@ public class LijnElement : Element
         return d <= marge;
     }
 
+    public override string ZichzelfOpslaan()
+    {
+        return $"Lijn {p1.X} {p1.Y} {p2.X} {p2.Y}";
+    }
 }

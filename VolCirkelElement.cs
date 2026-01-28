@@ -20,4 +20,9 @@ public class VolCirkelElement : Element
     {
         return kader.Contains(p);
     }
+
+    public override string ZichzelfOpslaan()
+    {
+        return $"Volcirkel {kader.X} {kader.Y} {kader.Width} {kader.Height} ";
+    }
 }

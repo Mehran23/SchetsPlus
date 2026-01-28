@@ -20,4 +20,9 @@ public class RechthoekElement : Element
     {
         return kader.Contains(p);
     }
+
+    public override string ZichzelfOpslaan()
+    {
+        return $"rechthoek {kader.X} {kader.Y} {kader.Width} {kader.Height} ";
+    }
 }

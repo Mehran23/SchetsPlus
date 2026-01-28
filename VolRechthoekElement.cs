@@ -1,4 +1,6 @@
+using System;
 using System.Drawing;
+using System.IO;
 
 public class VolRechthoekElement : Element
 {
@@ -20,4 +22,15 @@ public class VolRechthoekElement : Element
 	{
 		return kader.Contains(p);
 	}
+
+    public override string ZichzelfOpslaan()
+    {
+        return $"VolRechtHoek {kader.X} {kader.Y} {kader.Width} {kader.Height} ";
+    }
 }
+
+
+
+
+
+
